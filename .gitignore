@@ -1,0 +1,21 @@
+# Binaries and build artifacts
+bin/
+dist/
+*.exe
+*.test
+*.out
+coverage.out
+
+# Runtime data and secrets
+config/config.json
+data/
+logs/
+backups/
+uploads/
+.env
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
