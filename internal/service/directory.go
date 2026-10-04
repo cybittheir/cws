@@ -2,26 +2,19 @@ package service
 
 import (
 	"context"
-	"corporate-workspace/internal/domain/directory"
+	"corporate-workspace/internal/domain"
 	"corporate-workspace/internal/repository"
 )
 
 type DirectoryService struct{ store repository.Store }
 
-func NewDirectory(store repository.Store) *DirectoryService { return &DirectoryService{store} }
-func (s *DirectoryService) List(ctx context.Context, companyID int, f repository.DirectoryFilter) (repository.DirectoryResult, error) {
-	if f.PerPage <= 0 {
-		f.PerPage = 50
-	}
-	return s.store.Directory(ctx, companyID, f)
+func NewDirectory(s repository.Store) *DirectoryService { return &DirectoryService{s} }
+func (s *DirectoryService) List(c context.Context, company int, q string) ([]domain.Employee, []domain.Department, int, int, error) {
+	return s.store.Directory(c, company, q)
 }
-func (s *DirectoryService) Employee(ctx context.Context, companyID, id int) (directory.Employee, error) {
-	return s.store.EmployeeByID(ctx, companyID, id)
+func (s *DirectoryService) Employee(c context.Context, company, id int) (domain.Employee, error) {
+	return s.store.Employee(c, company, id)
 }
-func (s *DirectoryService) UpdateOwnContacts(ctx context.Context, userID, employeeID int, u repository.ContactUpdate) (directory.Employee, error) {
-	e, err := s.store.UpdateOwnContacts(ctx, userID, employeeID, u)
-	if err == nil {
-		_ = s.store.Audit(ctx, repository.AuditEntry{ActorUserID: userID, CompanyID: e.CompanyID, Action: "contacts.updated", EntityType: "employee", EntityID: employeeID})
-	}
-	return e, err
+func (s *DirectoryService) Update(c context.Context, user, employee int, u repository.ContactUpdate) (domain.Employee, error) {
+	return s.store.UpdateOwnContacts(c, user, employee, u)
 }

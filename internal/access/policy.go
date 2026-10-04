@@ -1,11 +1,19 @@
 package access
 
-import "corporate-workspace/internal/domain/directory"
+import "corporate-workspace/internal/domain"
 
-func CanManageDirectory(role directory.Role) bool {
-	return role == directory.RoleSystemAdmin || role == directory.RoleCompanyAdmin || role == directory.RoleHR
+func CanManageDirectory(role domain.Role) bool {
+	return role == domain.RoleSystemAdmin ||
+		role == domain.RoleCompanyAdmin ||
+		role == domain.RoleHR
 }
-func CanSeeArchived(role directory.Role) bool {
-	return role == directory.RoleSystemAdmin || role == directory.RoleCompanyAdmin || role == directory.RoleHR
+
+func CanSeeArchived(role domain.Role) bool {
+	return role == domain.RoleSystemAdmin ||
+		role == domain.RoleCompanyAdmin ||
+		role == domain.RoleHR
 }
-func CanEditOwnContacts(actorID, targetID int) bool { return actorID == targetID }
+
+func CanEditOwnContacts(actorEmployeeID, targetEmployeeID int) bool {
+	return actorEmployeeID == targetEmployeeID
+}
