@@ -1,0 +1,16 @@
+services:
+  app:
+    build: .
+    ports: ["8080:8080"]
+    volumes:
+      - ./runtime/config:/app/config
+      - ./runtime/data:/app/data
+      - ./runtime/logs:/app/logs
+      - ./runtime/backups:/app/backups
+      - ./runtime/uploads:/app/uploads
+  postgres:
+    image: postgres:16-alpine
+    environment: { POSTGRES_DB: workspace, POSTGRES_USER: workspace, POSTGRES_PASSWORD: workspace }
+    ports: ["5432:5432"]
+    volumes: ["postgres-data:/var/lib/postgresql/data"]
+volumes: { postgres-data: {} }

@@ -1,25 +1,13 @@
 name: Go checks
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
-
+on: [push, pull_request]
 jobs:
   check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v5
-        with:
-          go-version: stable
-      - name: Verify module when Go source appears
-        shell: bash
-        run: |
-          if [ -f go.mod ]; then
-            go mod tidy
-            go test ./...
-          else
-            echo "Stage 0: Go module will be added in stage 1."
-          fi
+        with: { go-version: '1.27' }
+      - run: gofmt -d ./cmd ./internal
+      - run: go vet ./...
+      - run: go test ./...
+      - run: go build ./cmd/server
